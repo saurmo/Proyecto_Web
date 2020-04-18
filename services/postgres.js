@@ -1,20 +1,20 @@
 const { Pool } = require("pg");
 
-class ServicioPG {
+class ServicePG {
   constructor() {
     this.pool = new Pool({
       user: "postgres",
       host: "localhost",
-      database: "bookmarks",
+      database: "proyecto_aula",
       password: "7034",
       port: 5432
     });
   }
 
-  async ejecutarSql(sql) {
-    let respuesta = await this.pool.query(sql);
-    return respuesta;
+  async runSql(sql) {
+    let answer = await this.pool.query(sql);
+    return answer;
   }
 }
 
-module.exports = ServicioPG;
+module.exports = ServicePG;
