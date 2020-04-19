@@ -29,7 +29,8 @@ let saveUser = async user => {
                   '${user.id}',
                   '${user.name}',
                   '${user.lastname}',
-                   ${user.age},
+                  '${user.age}',
+                  '${user.email}',
                   '${user.city}',
                   '${user.ocupation}',
                    ${user.role},
@@ -55,7 +56,7 @@ let consultUser = async (id) => {
 let deleteUser = id => {
     let _service = new ServicePG();
     let sql = `DELETE FROM users WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
+    let answer = _service.runSql(sql);
     return answer;
 };
 
@@ -64,6 +65,7 @@ let editUser = async (user, id) => {
     let sql = `UPDATE users set name = '${user.name}',
                  lastname = '${user.lastname}',
                  age = ${user.age},
+                 email = '${user.email}',
                  city = '${user.city}',
                  ocupation = '${user.ocupation}',
                  role = ${user.role},

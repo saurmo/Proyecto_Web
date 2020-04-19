@@ -79,7 +79,7 @@ router.delete("/roles/:id", (req, res) => {
       // Elimina el rol en base de datos
       deleteRole(info_role)
         .then(answerDB => {
-          res.send({ ok: true, mensaje: "Modulo eliminado", info: info_role });
+          res.send({ ok: true, mensaje: "Rol eliminado", info: info_role });
         })
         .catch(error => {
           res.send(error);

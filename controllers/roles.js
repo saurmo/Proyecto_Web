@@ -45,14 +45,14 @@ let consultRole = async (id) => {
 let deleteRole = id => {
     let _service = new ServicePG();
     let sql = `DELETE FROM roles WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
+    let answer = _service.runSql(sql);
     return answer;
 };
 
 let editRole = async (role, id) => {
     let _service = new ServicePG();
     let sql = `UPDATE roles set name = '${role.name}',
-                 description = ${role.description},
+                 description = '${role.description}',
                  actions = TRUE WHERE id='${id}'`;
     let answer = await _service.runSql(sql);
     return answer;

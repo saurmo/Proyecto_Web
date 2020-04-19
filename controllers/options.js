@@ -47,14 +47,14 @@ let consultOption = async (id) => {
 let deleteOption = id => {
     let _service = new ServicePG();
     let sql = `DELETE FROM options WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
+    let answer = _service.runSql(sql);
     return answer;
 };
 
 let editOption = async (option, id) => {
     let _service = new ServicePG();
     let sql = `UPDATE options set name = '${option.name}',
-                 description = ${option.description},
+                 description = '${option.description}',
                  role = ${option.role},
                  module = ${option.module},
                  actions = TRUE WHERE id='${id}'`;

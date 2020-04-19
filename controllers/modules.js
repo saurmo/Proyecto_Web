@@ -45,14 +45,14 @@ let consultModule = async (id) => {
 let deleteModule = id => {
     let _service = new ServicePG();
     let sql = `DELETE FROM modules WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
+    let answer = _service.runSql(sql);
     return answer;
 };
 
 let editModule = async (module, id) => {
     let _service = new ServicePG();
     let sql = `UPDATE modules set name = '${module.name}',
-                 description = ${module.description},
+                 description = '${module.description}',
                  actions = TRUE WHERE id='${id}'`;
     let answer = await _service.runSql(sql);
     return answer;
