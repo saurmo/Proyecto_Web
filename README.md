@@ -15,7 +15,7 @@ Cuando se requiere una cuenta con permisos de acceso en específico(tipos de usu
 ##  Alejandra Bedoya
 - Diseño con Boostrap-Vue
 - Programación en JavaScript
-- Manejo de información en el LocalStorage
+- Creación de la API
 
 # Información requerida
 
