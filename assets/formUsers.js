@@ -49,6 +49,11 @@ export default {
     validationAge() {
       return this.validationCondition(this.user.age >= 0);
     },
+
+    validationEmail() {
+      return this.validationCondition(this.user.email > 0);
+    },
+
     validationExists() {
       var status = true;
       for (let i in this.list_users) {
@@ -88,7 +93,6 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/v1/roles/")
         .then((response) => {
-          console.log(response);
           let array = response.data.info;
           for (let i in array) {
             let temp = { value: "", text: "" };

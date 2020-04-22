@@ -76,9 +76,12 @@
             <b-form-invalid-feedback :state="validationAge"
               >Ingrese un valor válido</b-form-invalid-feedback
             >
+             <b-form-invalid-feedback :state="validationEmail"
+              >Campo obligatorio</b-form-invalid-feedback
+            >
           </b-form-group>
 
-          <b-form-group label="Correo" label-for="email">
+          <b-form-group @submit.stop.prevent label="Correo" label-for="email">
             <b-form-input
               class="form-control"
               type="email"

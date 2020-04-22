@@ -14,11 +14,14 @@ const route_users = require("./routes/users");
 const route_modules = require("./routes/modules");
 const route_roles = require("./routes/roles");
 const route_options = require("./routes/options");
+const route_mail = require("./routes/sendEmail");
+
 
 app.use(vs, route_users);
 app.use(vs, route_modules);
 app.use(vs, route_roles);
 app.use(vs, route_options);
+app.use(vs, route_mail);
 
 // Puerto
 const port = 8000;
