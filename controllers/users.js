@@ -22,7 +22,7 @@ let validateUser = (user) => {
 let saveUser = async (user) => {
   let _service = new ServicePG();
   let sql = `INSERT INTO public.users(
-              id, name, lastname, age, email, city, ocupation, role, actions)
+              id, name, lastname, age, email, city, ocupation, role, actions, password)
               VALUES (
                   '${user.id}',
                   '${user.name}',
@@ -32,7 +32,10 @@ let saveUser = async (user) => {
                   '${user.city}',
                   '${user.ocupation}',
                    ${user.role},
-                  TRUE);`;
+                  TRUE,
+                  '${user.id}'
+                  );`;
+                
   let answer = await _service.runSql(sql);
   return answer;
 };
@@ -74,7 +77,8 @@ let editUser = async (user, id) => {
                  city = '${user.city}',
                  ocupation = '${user.ocupation}',
                  role = ${user.role},
-                 actions = TRUE WHERE id='${id}'`;
+                 actions = TRUE WHERE id='${id}'
+                 password = ${id}`;
   let answer = await _service.runSql(sql);
   return answer;
 };

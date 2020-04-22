@@ -170,6 +170,7 @@ CREATE TABLE "public"."users" (
     "ocupation" varchar,
     "role" int4,
     "actions" bool DEFAULT true,
+    "password" varchar NOT NULL,
     CONSTRAINT "users_role_fkey" FOREIGN KEY ("role") REFERENCES "public"."roles"("id"),
     PRIMARY KEY ("id")
 );
@@ -197,3 +198,8 @@ INSERT INTO "public"."options" ("id", "name", "description", "role", "module", "
 ('0', 'default', NULL, '0', '0', 't');
 ```
 
+___
+
+# Postman
+
+https://app.getpostman.com/join-team?invite_code=fa2ef0be9cb0b159984729754b0ccb9a

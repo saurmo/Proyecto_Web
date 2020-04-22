@@ -51,7 +51,7 @@ export default {
     },
 
     validationEmail() {
-      return this.validationCondition(this.user.email > 0);
+      return this.validationCondition(this.user.email.length > 0);
     },
 
     validationExists() {
@@ -112,6 +112,7 @@ export default {
           .post("http://127.0.0.1:8000/api/v1/new-user/", this.user)
           .then((response) => {
             this.list_users.push(response.data.info);
+            axios.post("http://127.0.0.1:8000/api/v1/send-mail/", this.user);
             this.user = {
               id: "",
               name: "",

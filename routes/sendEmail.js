@@ -2,6 +2,7 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const router = express.Router();
 
+//Transportador o enviador del correo
 let transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -16,11 +17,12 @@ let transporter = nodemailer.createTransport({
 router.post("/send-mail", (req, res) => {
   let info = req.body;
 
+  //Esctructura del correo
   var html =
     '<img src="https://redunete.net/wp-content/uploads/2019/02/logo-blanco-Udem-700x300.jpg" alt="Universidad de Medellín"width="200" height="100"> <p style="color:#FF0040";>Señor usuario</p> <p>Le informamos que se ha creado una cuenta para que usted pueda acceder a diferentes servicios que ofrece la plataforma.</p><p><b>Usuario:</b>' +
-    info.user +
+    info.id +
     "</p><p><b>Clave: </b>" +
-    info.user +
+    info.id +
     "</p><p>Podrá cambiar su clave al ingresar a la plataforma. Esta es personal y su buen manejo es su responsabilidad. </p>";
 
   var mailOptions = {
@@ -34,10 +36,7 @@ router.post("/send-mail", (req, res) => {
     if (error) {
       return console.log(error);
     }
-    console.log("mensaje enviado");
-    console.log("Message sent: %s", info.messageId);
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    console.log("Correo electrónico enviado");
   });
 });
 module.exports = router;
