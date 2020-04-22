@@ -1,82 +1,121 @@
+import axios from "axios";
+
 export default {
-    data() {
+  data() {
     return {
-    message: "CREACIÓN DE ROLES",
-    inEdition: false,
-    role: {
-    id: "",
-    name: "",
-    description: "",
-    acciones: true
-    },
-    list_roles: [
-    {
-    id: "001",
-    name: "Profesor",
-    description: "tyhkulirguouprgh",
-    acciones: true
-    }
-    ],
-    temporal: []
+      message: "CREACIÓN DE ROLES",
+      inEdition: false,
+      showTable: false,
+      validation: "",
+      role: {
+        id: "",
+        name: "",
+        description: "",
+        actions: true,
+      },
+      list_roles: [],
     };
+  },
+  created() {
+    this.showRoles();
+  },
+  computed: {
+    validationName() {
+      return this.validationCondition(this.role.name.length > 0);
     },
-    methods: {
+  },
+  methods: {
+    validationCondition(bool) {
+        if (bool == false) {
+          this.validation = false;
+          return false;
+        } else {
+          this.validation = true;
+          return true;
+        }
+      },
+      showRoles() {
+        axios
+          .get("http://127.0.0.1:8000/api/v1/roles/")
+          .then((response) => {
+            this.list_roles = response.data.info;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
     createRole() {
-    this.list_roles.push(this.role);
-    this.role = {
-    id: "",
-    name: "",
-    description: "",
-    acciones: true
-    };
-    this.saveLocalStorage(),
-    this.getLocalStorage()
+        if (this.validation == true) {
+            axios
+              .post("http://127.0.0.1:8000/api/v1/new-role/", this.role)
+              .then((response) => {
+                this.list_roles.push(response.data.info);
+                this.role = {
+                    id: "",
+                    name: "",
+                    description: "",
+                    actions: true,
+                  };
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            alert("LLene todos los campos correctamente");
+          }
     },
-    deleteModule({ item }) {
-    let position = this.list_roles.findIndex(
-    role => role.id == item.id
-    );
-    this.list_roles.splice(position, 1);
-    this.saveLocalStorage()
+    deleteRole({ item }) {
+        axios
+        .delete(`http://127.0.0.1:8000/api/v1/roles/${item.id}`)
+        .then((response) => {
+          let position = this.list_roles.findIndex(
+            (role) => role.id == item.id
+          );
+          this.list_roles.splice(position, 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    loadModule({ item }) {
-    let rl = this.list_roles.find(
-    role => role.id == item.id
-    );
-    this.inEdition = true;
-    this.role = Object.assign({}, rl);
-    this.saveLocalStorage()
-    },
-    saveLocalStorage(){
-        localStorage.setItem("Roles", JSON.stringify(this.list_roles));
-    },
-    getLocalStorage(){
-        if(localStorage.getItem("Modules")){
-            this.temporal = JSON.parse(localStorage.getItem("Modules"));
-            console.log("YA LLEGUEEEEE");
-        }
+    loadRole({ item }) {
+        axios
+        .get(`http://127.0.0.1:8000/api/v1/roles/${item.id}`)
+        .then((response) => {
+          var array = response.data.info;
 
-        for (let i in this.temporal){
-                let temp = this.temporal[i];
-                this.list_roles.push(temp.name)
-                console.log("Por aquí tambien");
-                console.log(temp.name);
-        }
-        console.log("Hola", this.list_roles);
-
+          this.inEdition = true;
+          this.role.id = array[0].id;
+          this.role.name = array[0].name;
+          this.role.description = array[0].description;
+          this.role.actions = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    updateModule() {
-    let position = this.list_roles.findIndex(
-    role => role.id == this.role.id
-    );
-    this.list_roles.splice(position, 1, this.role);
-    this.role = {
-    id: "",
-    name: "",
-    description: "",
-    acciones: true
-    };
-    this.saveLocalStorage()
-    }
-    }
-    };
+    updateRole() {
+        if (this.validation == true) {
+            axios
+              .put(`http://127.0.0.1:8000/api/v1/roles/${this.role.id}`, this.user)
+              .then((response) => {
+                let position = this.list_roles.findIndex(
+                  (role) => role.id == this.role.id
+                );
+                this.list_roles.splice(position, 1, this.role);
+                this.inEdition = false;
+                this.role = {
+                    id: "",
+                    name: "",
+                    description: "",
+                    actions: true,
+                  };
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            alert("LLene todos los campos correctamente");
+          }
+    },
+  },
+};

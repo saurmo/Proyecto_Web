@@ -1,12 +1,10 @@
-
 const ServicePG = require("../services/postgres");
 
-
-let validateUser = user => {
+let validateUser = (user) => {
   if (!user) {
     throw {
       ok: false,
-      mensaje: "La información de la persona es obligatoria."
+      mensaje: "La información de la persona es obligatoria.",
     };
   }
 
@@ -21,7 +19,7 @@ let validateUser = user => {
   }
 };
 
-let saveUser = async user => {
+let saveUser = async (user) => {
   let _service = new ServicePG();
   let sql = `INSERT INTO public.users(
               id, name, lastname, age, email, city, ocupation, role, actions)
@@ -35,6 +33,13 @@ let saveUser = async user => {
                   '${user.ocupation}',
                    ${user.role},
                   TRUE);`;
+  let answer = await _service.runSql(sql);
+  return answer;
+};
+
+let viewUser = async () => {
+  let _service = new ServicePG();
+  let sql = `SELECT users.id, users.name, users.lastname, users.age, users.email, users.city, users.ocupation, roles.name as "rol", users.actions FROM users INNER JOIN roles on users.role = roles.id;`;
   let answer = await _service.runSql(sql);
   return answer;
 };
@@ -53,16 +58,16 @@ let consultUser = async (id) => {
   return answer;
 };
 
-let deleteUser = id => {
-    let _service = new ServicePG();
-    let sql = `DELETE FROM users WHERE id='${id}'`;
-    let answer = _service.runSql(sql);
-    return answer;
+let deleteUser = (id) => {
+  let _service = new ServicePG();
+  let sql = `DELETE FROM users WHERE id='${id}'`;
+  let answer = _service.runSql(sql);
+  return answer;
 };
 
 let editUser = async (user, id) => {
-    let _service = new ServicePG();
-    let sql = `UPDATE users set name = '${user.name}',
+  let _service = new ServicePG();
+  let sql = `UPDATE users set name = '${user.name}',
                  lastname = '${user.lastname}',
                  age = ${user.age},
                  email = '${user.email}',
@@ -70,12 +75,15 @@ let editUser = async (user, id) => {
                  ocupation = '${user.ocupation}',
                  role = ${user.role},
                  actions = TRUE WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
-    return answer;
+  let answer = await _service.runSql(sql);
+  return answer;
 };
-module.exports = { validateUser,
-                    saveUser,
-                    consultUsers,
-                    consultUser,
-                    deleteUser,
-                    editUser };
+module.exports = {
+  validateUser,
+  saveUser,
+  consultUsers,
+  consultUser,
+  deleteUser,
+  editUser,
+  viewUser
+};

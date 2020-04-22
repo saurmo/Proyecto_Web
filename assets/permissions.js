@@ -1,105 +1,175 @@
+import axios from "axios";
+
 export default {
-    data() {
-
+  data() {
     return {
-    message: "GESTIÓN DE PERMISOS",
-    inEdition: false,
-    permission: {
-    role: null,
-    module: null,
-    description: "",
-    acciones: true
-    },
-    
-    list_permissions: [
-    {
-    role: "001",
-    module: "001",
-    acciones: true
-    }
-    ],
-    options_roles: [
+      message: "GESTIÓN DE PERMISOS",
+      inEdition: false,
+      showTable: false,
+      validation: "",
+      permission: {
+        id: "",
+        name: "",
+        description: "",
+        role: null,
+        modules: null,
+        acciones: true,
+      },
 
-    ],
-    options_modules: [
-        
-    ],
-    temporal: [
-        
-    ],
-    selected: []
+      list_permissions: [],
+      list_roles: [],
+      list_modules: [],
     };
+  },
+  created() {
+    this.showPermissions();
+    this.showRoles();
+    this.showModules();
+  },
+  computed: {
+    validationName() {
+      return this.validationCondition(this.permission.name.length > 0);
     },
-    
-    mounted(){
-        this.getLocalStorageInfo();
+    validationRole() {
+      return this.validationCondition(this.permission.role.length > 0);
     },
-    methods: {
+    validationModule() {
+      return this.validationCondition(this.permission.modules.length > 0);
+    },
+  },
+  methods: {
+    validationCondition(bool) {
+        if (bool == false) {
+          this.validation = false;
+          return false;
+        } else {
+          this.validation = true;
+          return true;
+        }
+      },
+      showPermissions() {
+        axios
+          .get("http://127.0.0.1:8000/api/v1/view-options/")
+          .then((response) => {
+            this.list_permissions = response.data.info;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      showRoles() {
+        axios
+          .get("http://127.0.0.1:8000/api/v1/roles/")
+          .then((response) => {
+            let array = response.data.info;
+            for (let i in array) {
+              let temp = { value: "", text: "" };
+              temp.value = array[i].id;
+              temp.text = array[i].name;
+              this.list_roles.push(temp);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      showModules() {
+        axios
+          .get("http://127.0.0.1:8000/api/v1/modules/")
+          .then((response) => {
+            let array = response.data.info;
+            for (let i in array) {
+              let temp = { value: "", text: "" };
+              temp.value = array[i].id;
+              temp.text = array[i].name;
+              this.list_modules.push(temp);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
     createPermission() {
-    this.list_permissions.push(this.permission);
-    this.permission = {
-        role: null,
-        module: null,
-        description: "",
-    acciones: true
-    };
-    this.saveLocalStorage()
+        if (this.validation == true) {
+          console.log(this.permission)
+            axios
+              .post("http://127.0.0.1:8000/api/v1/new-option/", this.permission)
+              .then((response) => {
+                console.log(response);
+                this.list_permissions.push(response.data.info);
+                this.permission = {
+                    id: "",
+                    name: "",
+                    description: "",
+                    role: null,
+                    modules: null,
+                    acciones: true,
+                  };
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            alert("LLene todos los campos correctamente");
+          }
     },
-    deleteModule({ item }) {
-    let position = this.list_permissions.findIndex(
-        permission => permission.id == item.id
-    );
-    this.list_permissions.splice(position, 1);
-    this.saveLocalStorage()
+    deletePermission({ item }) {
+        axios
+        .delete(`http://127.0.0.1:8000/api/v1/options/${item.id}`)
+        .then((response) => {
+          let position = this.list_permissions.findIndex(
+            (permission) => permission.id == item.id
+          );
+          this.list_permissions.splice(position, 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    loadModule({ item }) {
-    let rl = this.list_permissions.find(
-        permission => permission.id == item.id
-    );
-    this.inEdition = true;
-    this.permission = Object.assign({}, rl);
-    this.saveLocalStorage()
-    },
-    saveLocalStorage(){
-        localStorage.setItem("Permissions", JSON.stringify(this.list_permissions));
-    },
-    getLocalStorage(){
-        if(localStorage.getItem("Permissions")){
-            this.list_permissions = JSON.parse(localStorage.getItem("Permissions"));
-        }
-    },
-    getLocalStorageInfo(){
-        if(localStorage.getItem("Roles")){
-            this.temporal = JSON.parse(localStorage.getItem("Roles"));
-            for (let i in this.temporal){
-                let temp = this.temporal[i];
-                this.options_roles.push(temp.name)
-        }
-        }
+    loadPermission({ item }) {
+        axios
+        .get(`http://127.0.0.1:8000/api/v1/options/${item.id}`)
+        .then((response) => {
+          var array = response.data.info;
 
-        if(localStorage.getItem("Modules")){
-            this.temporal = JSON.parse(localStorage.getItem("Modules"));
-            for (let i in this.temporal){
-                let temp2 = this.temporal[i];
-                this.options_modules.push(temp2.name)
-        }
-        } 
-        console.log("Hola", this.options_roles);
-        console.log("Hola", this.options_modules);
-
+          this.inEdition = true;
+          this.permission.id = array[0].id;
+          this.permission.name = array[0].name;
+          this.permission.description = array[0].description;
+          this.permission.role = array[0].role;
+          this.permission.modules = array[0].modules;
+          this.permission.actions = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    updateModule() {
-    let position = this.list_permissions.findIndex(
-        permission => permission.id == this.permission.id
-    );
-    this.list_permissions.splice(position, 1, this.permission);
-    this.permission = {
-        role: null,
-        module: null,
-        description: "",
-    acciones: true
-    };
-    this.saveLocalStorage()
-    }
-    }
-    };
+
+    updatePermission () {
+        if (this.validation == true) {
+            axios
+              .put(`http://127.0.0.1:8000/api/v1/options/${this.role.id}`, this.user)
+              .then((response) => {
+                let position = this.list_permissions.findIndex(
+                  (permission) => permission.id == this.permission.id
+                );
+                this.list_permissions.splice(position, 1, this.permission);
+                this.inEdition = false;
+                this.permission = {
+                    id: "",
+                    name: "",
+                    description: "",
+                    role: null,
+                    modules: null,
+                    acciones: true,
+                  };
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            alert("LLene todos los campos correctamente");
+          }
+    },
+  },
+};

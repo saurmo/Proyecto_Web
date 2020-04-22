@@ -6,7 +6,8 @@ const { validateOption,
     consultOptions,
     consultOption,
     deleteOption,
-    editOption } = require("../controllers/options");
+    editOption,
+    viewOption } = require("../controllers/options");
 
 /**
  * Obtener todos las opciones
@@ -39,6 +40,22 @@ router.get("/options/:id", (req, res) => {
     res.send(error);
   });
   
+});
+
+/**
+ * Obtener inner join de opciones, modulos y roles
+ */
+router.get("/view-options", (req, res) => {
+  viewOption()
+    .then(answerDB => {
+      let records = answerDB.rows;
+      res.send({ ok: true, info: records, mensaje: "Inner join realizado" });
+    
+    })
+    .catch(error => {
+      res.send(error);
+    });
+    
 });
 
 /**

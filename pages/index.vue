@@ -12,25 +12,17 @@
 <br />
 
 
-        <b-button block href="/roles" variant="danger" size="lg">Cear Rol</b-button>
-          <b-button block href="/formUsers" variant="danger" size="lg">Crear Usuario</b-button>
+        <b-button block href="/roles" variant="danger" size="lg">Gestión de Roles</b-button>
+          <b-button block href="/formUsers" variant="danger" size="lg">Gestión de Usuarios</b-button>
 
-    <b-button block href="/modules" variant="danger" size="lg">Crear Modulo</b-button>
-    <b-button block href="/permissions" variant="danger" size="lg">Gestionar permisos</b-button>
-
-    <hi>h</hi>
-
-  
-
+    <b-button block href="/modules" variant="danger" size="lg">Gestión de Modulos</b-button>
+    <b-button block href="/permissions" variant="danger" size="lg">Gestión de Permisos</b-button>
+<br />
+ 
 </b-col>
 </b-container>
 </div>
 </template>
-
-<script src="../assets/modules.js"/>
-
-<html>
-</html>
 
 <style>
 
@@ -46,7 +38,7 @@
 	align-content: stretch;
 }
 
-hi {
+.hi {
     color: white
 }
 .tittle{

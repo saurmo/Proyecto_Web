@@ -6,7 +6,8 @@ const { validateUser,
   consultUsers,
   consultUser,
   deleteUser,
-  editUser } = require("../controllers/users");
+  editUser,
+  viewUser } = require("../controllers/users");
 
 /**
  * Obtener todos los usuarios
@@ -16,6 +17,22 @@ router.get("/users", (req, res) => {
     .then(answerDB => {
       let records = answerDB.rows;
       res.send({ ok: true, info: records, mensaje: "Usuarios consultados" });
+    
+    })
+    .catch(error => {
+      res.send(error);
+    });
+    
+});
+
+/**
+ * Obtener inner join de usuarios y roles
+ */
+router.get("/view-users", (req, res) => {
+  viewUser()
+    .then(answerDB => {
+      let records = answerDB.rows;
+      res.send({ ok: true, info: records, mensaje: "Inner join realizado" });
     
     })
     .catch(error => {

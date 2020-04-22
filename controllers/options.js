@@ -24,7 +24,7 @@ let saveOption = async option => {
                   '${option.name}',
                   '${option.description}',
                   '${option.role}',
-                  '${option.module}',
+                  '${option.modules}',
                   TRUE);`;
   let answer = await _service.runSql(sql);
   return answer;
@@ -51,12 +51,19 @@ let deleteOption = id => {
     return answer;
 };
 
+let viewOption = async () => {
+  let _service = new ServicePG();
+  let sql = `SELECT options.id, options.name, options.description, roles.name as "rol", modules."name" as "module", options.actions FROM "options" INNER JOIN roles on options.role = roles.id INNER JOIN modules on options.module = modules.id`;
+  let answer = await _service.runSql(sql);
+  return answer;
+};
+
 let editOption = async (option, id) => {
     let _service = new ServicePG();
     let sql = `UPDATE options set name = '${option.name}',
                  description = '${option.description}',
                  role = ${option.role},
-                 module = ${option.module},
+                 module = ${option.modules},
                  actions = TRUE WHERE id='${id}'`;
     let answer = await _service.runSql(sql);
     return answer;
@@ -66,4 +73,5 @@ module.exports = { validateOption,
                     consultOptions,
                     consultOption,
                     deleteOption,
-                    editOption };
+                    editOption,
+                    viewOption };
