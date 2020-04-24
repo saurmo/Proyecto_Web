@@ -31,7 +31,7 @@ router.get("/users", (req, res) => {
 router.get("/view-users", (req, res) => {
   viewUser()
     .then(answerDB => {
-      let records = answerDB.rows;
+      let records = answerDB;
       res.send({ ok: true, info: records, mensaje: "Inner join realizado" });
     
     })

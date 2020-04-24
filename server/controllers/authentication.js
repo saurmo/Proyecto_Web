@@ -23,7 +23,7 @@ let validateData = (user) => {
 //Consultar usuario con documento y clave
 let consultUser = async (user) => {
     let _service = new ServicePG();
-    let sql = `SELECT * FROM users WHERE id = $1 AND password = $2`;
+    let sql = `SELECT * FROM users WHERE id = $1 AND password = md5($2)`;
     let values = [user.id, user.password]
     let answer = await _service.runSql(sql, values);
     return answer;

@@ -56,19 +56,20 @@ let viewUser = async () => {
   let _service = new ServicePG();
   let sql = `SELECT users.id, users.name, users.lastname, users.age, users.email, users.city, users.ocupation, roles.name as "rol", users.actions FROM users INNER JOIN roles on users.role = roles.id;`;
   let answer = await _service.runSql(sql);
-  return answer;
+  let result = answer.rows
+  return result;
 };
 
 let consultUsers = async () => {
   let _service = new ServicePG();
-  let sql = `SELECT * FROM users`;
+  let sql = `SELECT users.id, users.name, users.lastname, users.age, users.email, users.city, users.ocupation, users.role, users.actions FROM users`;
   let answer = await _service.runSql(sql);
   return answer;
 };
 
 let consultUser = async (id) => {
   let _service = new ServicePG();
-  let sql = `SELECT * FROM users WHERE id = '${id}'`;
+  let sql = `SELECT users.id, users.name, users.lastname, users.age, users.email, users.city, users.ocupation, users.role, users.actions FROM users WHERE id = '${id}'`;
   let answer = await _service.runSql(sql);
   return answer;
 };
