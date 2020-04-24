@@ -18,11 +18,12 @@ const route_mail = require("./routes/sendEmail");
 const route_login = require("./routes/authentication");
 
 app.use(vs, route_login);
+app.use(vs, route_mail);
 app.use(vs, route_users);
 app.use(vs, route_modules);
 app.use(vs, route_roles);
 app.use(vs, route_options);
-app.use(vs, route_mail);
+
 
 app.use('/', (req, res) => {
   res.status(404).send({

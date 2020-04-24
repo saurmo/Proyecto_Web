@@ -69,6 +69,7 @@ router.post("/new-user", (req, res) => {
     // Valida la información, si hay un error se envia al catch
     validateUser(info_user);
 
+
     // Guardar la persona en base de datos
     saveUser(info_user)
       .then(answerDB => {

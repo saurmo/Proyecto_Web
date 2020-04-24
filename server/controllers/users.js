@@ -24,19 +24,31 @@ let saveUser = async (user) => {
   let sql = `INSERT INTO public.users(
               id, name, lastname, age, email, city, ocupation, role, actions, password)
               VALUES (
-                  '${user.id}',
-                  '${user.name}',
-                  '${user.lastname}',
-                  '${user.age}',
-                  '${user.email}',
-                  '${user.city}',
-                  '${user.ocupation}',
-                   ${user.role},
+                  $1,
+                  $2,
+                  $3,
+                  $4,
+                  $5,
+                  $6,
+                  $7,
+                  $8,
                   TRUE,
-                  '${user.id}'
+                  md5($9)
                   );`;
                 
-  let answer = await _service.runSql(sql);
+  let values = [
+    user.id,
+    user.name,
+    user.lastname,
+    user.age,
+    user.email,
+    user.city,
+    user.ocupation,
+    user.role,
+    user.password,
+  ];
+
+  let answer = await _service.runSql(sql, values);
   return answer;
 };
 
@@ -63,23 +75,37 @@ let consultUser = async (id) => {
 
 let deleteUser = (id) => {
   let _service = new ServicePG();
-  let sql = `DELETE FROM users WHERE id='${id}'`;
-  let answer = _service.runSql(sql);
+  let sql = `DELETE FROM users WHERE id = $1`;
+  let values = [id]
+  let answer = _service.runSql(sql, values);
   return answer;
 };
 
 let editUser = async (user, id) => {
   let _service = new ServicePG();
-  let sql = `UPDATE users set name = '${user.name}',
-                 lastname = '${user.lastname}',
-                 age = ${user.age},
-                 email = '${user.email}',
-                 city = '${user.city}',
-                 ocupation = '${user.ocupation}',
-                 role = ${user.role},
-                 actions = TRUE WHERE id='${id}'
-                 password = ${id}`;
-  let answer = await _service.runSql(sql);
+  let sql = `UPDATE users set name = $1,
+                 lastname = $2,
+                 age = $3,
+                 email = $4,
+                 city = $5,
+                 ocupation = $6,
+                 role = $7,
+                 actions = TRUE,
+                 password = $8,
+                 WHERE id= $9`;
+
+  let values = [
+    user.name,
+    user.lastname,
+    user.age,
+    user.email,
+    user.city,
+    user.ocupation,
+    user.role,
+    user.password,
+    id
+  ]
+  let answer = await _service.runSql(sql, values);
   return answer;
 };
 module.exports = {

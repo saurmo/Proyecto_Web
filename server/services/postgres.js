@@ -15,6 +15,11 @@ class ServicePG {
     let answer = await this.pool.query(sql);
     return answer;
   }
+
+  async runSql(sql, values) {
+    let answer = await this.pool.query(sql, values);
+    return answer;
+  }
 }
 
 module.exports = ServicePG;

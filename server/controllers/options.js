@@ -1,32 +1,31 @@
-
 const ServicePG = require("../services/postgres");
 
-
-let validateOption = option => {
+let validateOption = (option) => {
   if (!option) {
     throw {
       ok: false,
-      mensaje: "La información del permiso es obligatoria."
+      mensaje: "La información del permiso es obligatoria.",
     };
   }
 
   if (!option.name) {
     throw { ok: false, mensaje: "El nombre es obligatorio." };
   }
-
 };
 
-let saveOption = async option => {
+let saveOption = async (option) => {
   let _service = new ServicePG();
   let sql = `INSERT INTO public.options(
               name, description, role, module, actions)
               VALUES (
-                  '${option.name}',
-                  '${option.description}',
-                  '${option.role}',
-                  '${option.modules}',
+                  $1,
+                  $2,
+                  $3,
+                  $4,
                   TRUE);`;
-  let answer = await _service.runSql(sql);
+
+  let values = [option.name, option.description, option.role, option.modules];
+  let answer = await _service.runSql(sql, values);
   return answer;
 };
 
@@ -44,11 +43,12 @@ let consultOption = async (id) => {
   return answer;
 };
 
-let deleteOption = id => {
-    let _service = new ServicePG();
-    let sql = `DELETE FROM options WHERE id='${id}'`;
-    let answer = _service.runSql(sql);
-    return answer;
+let deleteOption = (id) => {
+  let _service = new ServicePG();
+  let sql = `DELETE FROM options WHERE id=$1`;
+  let values = [id];
+  let answer = _service.runSql(sql, values);
+  return answer;
 };
 
 let viewOption = async () => {
@@ -59,19 +59,29 @@ let viewOption = async () => {
 };
 
 let editOption = async (option, id) => {
-    let _service = new ServicePG();
-    let sql = `UPDATE options set name = '${option.name}',
-                 description = '${option.description}',
-                 role = ${option.role},
-                 module = ${option.modules},
-                 actions = TRUE WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
-    return answer;
+  let _service = new ServicePG();
+  let sql = `UPDATE options set name = $1,
+                 description = $2,
+                 role = $3,
+                 module = $4,
+                 actions = TRUE WHERE id = $5`;
+
+  let values = [
+    option.name,
+    option.description,
+    option.role,
+    option.modules,
+    id,
+  ];
+  let answer = await _service.runSql(sql, values);
+  return answer;
 };
-module.exports = { validateOption,
-                    saveOption,
-                    consultOptions,
-                    consultOption,
-                    deleteOption,
-                    editOption,
-                    viewOption };
+module.exports = {
+  validateOption,
+  saveOption,
+  consultOptions,
+  consultOption,
+  deleteOption,
+  editOption,
+  viewOption,
+};

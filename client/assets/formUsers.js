@@ -112,7 +112,11 @@ export default {
           .post("http://127.0.0.1:8000/api/v1/new-user/", this.user)
           .then((response) => {
             this.list_users.push(response.data.info);
-            axios.post("http://127.0.0.1:8000/api/v1/send-mail/", this.user);
+            console.log("Aquì estoy");
+            axios
+              .post("http://127.0.0.1:8000/api/v1/send-mail/", this.user)
+              .then((response) => console.log(response))
+              .catch((error) => console.log(error));
             this.user = {
               id: "",
               name: "",

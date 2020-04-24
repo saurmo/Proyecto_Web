@@ -21,10 +21,15 @@ let saveRole = async role => {
   let sql = `INSERT INTO public.roles(
               name, description, actions)
               VALUES (
-                  '${role.name}',
-                  '${role.description}',
+                  $1,
+                  $2,
                   TRUE);`;
-  let answer = await _service.runSql(sql);
+
+  let values = [
+    role.name,
+    role.description
+  ]
+  let answer = await _service.runSql(sql, values);
   return answer;
 };
 
@@ -44,17 +49,26 @@ let consultRole = async (id) => {
 
 let deleteRole = id => {
     let _service = new ServicePG();
-    let sql = `DELETE FROM roles WHERE id='${id}'`;
-    let answer = _service.runSql(sql);
+    let sql = `DELETE FROM roles WHERE id= $1`;
+    let values = [
+      id
+    ]
+    let answer = _service.runSql(sql, values);
     return answer;
 };
 
 let editRole = async (role, id) => {
     let _service = new ServicePG();
-    let sql = `UPDATE roles set name = '${role.name}',
-                 description = '${role.description}',
-                 actions = TRUE WHERE id='${id}'`;
-    let answer = await _service.runSql(sql);
+    let sql = `UPDATE roles set name = $1,
+                 description = $2,
+                 actions = TRUE WHERE id = $3`;
+
+    let values = [
+      role.name,
+      role.description,
+      id
+    ]
+    let answer = await _service.runSql(sql, values);
     return answer;
 };
 module.exports = { validateRole,
